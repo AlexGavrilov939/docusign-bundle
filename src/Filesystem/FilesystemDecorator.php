@@ -94,7 +94,7 @@ if (interface_exists(FilesystemInterface::class)) {
          */
         public function writeStream(string $location, $contents, array $config = []): void
         {
-            $this->decorated->writeStream($location, $config, $config);
+            $this->decorated->writeStream($location, $contents, $config);
         }
 
         /**
