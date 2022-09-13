@@ -148,6 +148,11 @@ final class EnvelopeBuilder implements EnvelopeBuilderInterface
         return $this;
     }
 
+    public function getSignatureZones(): array
+    {
+        return $this->signatureZones;
+    }
+
     public function addCallbackParameter($name, $value): self
     {
         $this->callbackParameters[$name] = $value;

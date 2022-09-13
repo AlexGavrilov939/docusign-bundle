@@ -33,14 +33,18 @@ final class CreateSignature implements EnvelopeBuilderCallableInterface
             return;
         }
 
-        $signatures = $this->signatureExtractor->getSignatures();
+        $signatures = $this->signatureExtractor->getSignatures() ?? [];
+        $signatureZones = $this->envelopeBuilder->getSignatureZones() ?? [];
 
-        if (empty($signatures)) {
+        if (empty($signatures) && empty($signatureZones)) {
             throw new \LogicException('No signatures defined. Check your `signatures` configuration and query parameter.');
         }
 
-        foreach ($signatures as $signature) {
-            $this->envelopeBuilder->addSignatureZone($signature['page'], $signature['x_position'], $signature['y_position']);
+        if (empty($signatureZones)) {
+            // then add default signature zone
+            foreach ($signatures as $signature) {
+                $this->envelopeBuilder->addSignatureZone($signature['page'], $signature['x_position'], $signature['y_position']);
+            }
         }
     }
 }
