@@ -80,7 +80,10 @@ final class JwtGrant implements GrantInterface
             $time = new \DateTimeImmutable();
             // Need for force seconds to 0, otherwise DocuSign will consider this token as invalid
             $time = $time->setTime((int) $time->format('H'), (int) $time->format('i'), 0, 0);
-            $config = Configuration::forSymmetricSigner(new Sha256(), InMemory::file("file://$this->privateKey"));
+            $key = file_exists("file://$this->privateKey") ?
+                InMemory::file("file://$this->privateKey"):
+                InMemory::plainText($this->privateKey);
+            $config = Configuration::forSymmetricSigner(new Sha256(), $key);
 
             return $config
                 ->builder()
