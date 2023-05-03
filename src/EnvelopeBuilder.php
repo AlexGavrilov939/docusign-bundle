@@ -17,6 +17,7 @@ use DocuSign\eSign\Api\EnvelopesApi;
 use DocuSign\eSign\Model;
 use DocusignBundle\EnvelopeCreator\EnvelopeCreatorInterface;
 use DocusignBundle\Filesystem\FilesystemInterface;
+use Psr\Log\LoggerInterface;
 use Webmozart\Assert\Assert;
 
 final class EnvelopeBuilder implements EnvelopeBuilderInterface
@@ -74,6 +75,7 @@ final class EnvelopeBuilder implements EnvelopeBuilderInterface
     private $name;
 
     public function __construct(
+        private LoggerInterface $logger,
         FilesystemInterface $storage,
         EnvelopeCreatorInterface $envelopeCreator,
         int $accountId,
@@ -101,6 +103,17 @@ final class EnvelopeBuilder implements EnvelopeBuilderInterface
         $this->name = $name;
 
         $this->docReference = time();
+
+        $this->logger->critical('[docusign_debug_bundle] envelope builder construct params:' . json_encode([
+            'envelopeCreator' => $this->envelopeCreator,
+            'signerName' => $this->signerName,
+            'signerEmail' => $this->signerEmail,
+            'apiUri' => $this->apiUri,
+            'callback' => $this->callback,
+            'mode' => $this->mode,
+            'authMode' => $this->authMode,
+            'name' => $this->name,
+        ]));
     }
 
     public function setFile(string $filePath): self
