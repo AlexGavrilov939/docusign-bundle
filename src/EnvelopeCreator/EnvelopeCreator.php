@@ -58,12 +58,18 @@ final class EnvelopeCreator implements EnvelopeCreatorInterface
 
             return $result;
         } catch (ApiException $exception) {
-            $this->logger->critical('Unable to send a document to DocuSign.', [
+            $this->logger->critical('Unable to send a document to DocuSign.' . json_encode([
                 'document' => $envelopeBuilder->getDocument(),
                 'signers' => $envelopeBuilder->getSigners(),
                 'envelope' => $envelopeBuilder->getEnvelopeDefinition(),
-                'request' => $exception->getResponseBody(),
-            ]);
+                'docReference' => $envelopeBuilder->getDocReference(),
+                'accountId' => $envelopeBuilder->getAccountId(),
+                'envelopeId' => $envelopeBuilder->getEnvelopeId(),
+                'filePath' => $envelopeBuilder->getFilePath(),
+                'mode' => $envelopeBuilder->getMode(),
+                'signatureZones' => $envelopeBuilder->getSignatureZones(),
+                'response_body' => $exception->getResponseBody(),
+            ]));
 
             throw new UnableToSignException($exception->getMessage());
         } finally {
